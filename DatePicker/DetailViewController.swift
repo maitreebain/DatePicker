@@ -56,6 +56,12 @@ class DetailViewController: UIViewController {
     
     @IBAction func rsvpChanged(_ sender: UISwitch) {
         
+        event?.willAttend = sender.isOn
+        
+            
     }
+    
+    
+    
 }
 

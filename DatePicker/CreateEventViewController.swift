@@ -18,9 +18,10 @@ class CreateEventViewController: UIViewController {
     
     var event: Event! {
         didSet { //property observer, gets called when the property changes
+            //changes meaning the when it gets assigned a new value
             //update UI whenever the event changes
             if event.willAttend {
-                rsvpLabel.text = "Yes"
+                rsvpLabel.text = "RSVP Yes"
                 createEventButton.setTitle("View Event", for: .normal)
             } else {
                 rsvpLabel.text = "RSVP No"
@@ -62,6 +63,28 @@ class CreateEventViewController: UIViewController {
         event.date = sender.date
     }
     
+    //unwind segue action
+    //we need to create an IBAction button from the source view controller (DetailViewController)to this unwind segue action
+    
+    //it's required to have a parameter to type UIStoryboardSegue in the unwind segue action
+    //why: this is the only way interface builder can recognize an unwind segue to connect to
+    
+    //Steps to create an unwind segue - returning from a source view controller
+    //1. write an @IBAction func
+    //2. UIStoryboardSegue parameter is required
+    //3. type cast (as? )and get access to the source view controller instance
+    //4. setup UI caccordingly see event = detailViewController.event, didSet{...} on event property above
+    //5. in storyboard connect action button to "exit" icon in source view controller and select e.g this methods (updateUIFromUnwindSegue)
+    @IBAction func updateUIFromUnwindSegue(segue: UIStoryboardSegue) {
+        //we need access to the source destination
+        guard let detailViewController = segue.source as? DetailViewController else {
+            return //more on refactoring to fatalError later
+        }
+        
+        event = detailViewController.event
+        //after event is set here, didSet on the event property gets called and the UI (user interface) is updated
+        //ui elements that gets updated are the rsvpLabel's text and createEventButton's titleLable
+    }
 
 }
 
